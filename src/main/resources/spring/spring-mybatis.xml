@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:faces="http://www.springframework.org/schema/faces"
+	xmlns:int-security="http://www.springframework.org/schema/integration/security"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/security http://www.springframework.org/schema/integration/security/spring-integration-security-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/faces http://www.springframework.org/schema/faces/spring-faces-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		">
+		
+		<beans:bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<beans:property name="locations">
+				<beans:list>
+					<beans:value>classpath:database/database.properties</beans:value>
+				</beans:list>
+			</beans:property>
+		</beans:bean>
+		
+		<beans:bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+			<beans:property name="driverClass" value="${jdbc.driver}"></beans:property>
+			<beans:property name="jdbcUrl" value="${jdbc.url}"></beans:property>
+			<beans:property name="user" value="${jdbc.user}"></beans:property>
+			<beans:property name="password" value="${jdbc.password}"></beans:property>
+			
+			<beans:property name="acquireIncrement" value="${c3p0.acquireIncrement}"></beans:property>
+			<beans:property name="minPoolSize" value="${c3p0.minPoolSize}"></beans:property>
+			<beans:property name="maxPoolSize" value="${c3p0.maxPoolSize}"></beans:property>
+			<beans:property name="maxIdleTime" value="${c3p0.maxIdleTime}"></beans:property>
+		</beans:bean>
+		
+		<tx:annotation-driven transaction-manager="transactionManager" />
+		<beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<beans:property name="dataSource" ref="dataSource"/>
+		</beans:bean>
+		
+		<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<beans:property name="dataSource" ref="dataSource"></beans:property>
+			<beans:property name="configLocation" value="classpath:spring/mybatis-config.xml"></beans:property>
+		</beans:bean>
+		
+		<beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<beans:property name="basePackage" value="com.ywa.mappers"></beans:property>
+		</beans:bean>
+</beans>
