@@ -23,8 +23,5 @@ public class UserDaoImplTest {
 		userDao.insertUser(user);
 	}
 	
-	public static void main(String[] args) {
-		String email = "y@mail.com";
-		System.out.println(email.length());
-	}
+
 }
